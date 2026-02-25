@@ -39,7 +39,7 @@ First download a [model checkpoint](https://drive.google.com/drive/folders/1ENl2
 python infer.py --checkpoint <path/to/checkpoint> --input_dir <path/to/input> --output_dir <path/to/output> --device <device/id>
 ```
 
-We provide a series of checkpoints that support different levels of correction with an adjustable threshold. To preserve more of the original WM segmentation:
+We provide a series of checkpoints that support different levels of correction. To preserve more of the original WM segmentation:
 ```
 python infer.py --checkpoint checkpoint/correction_net_10error_free_wm.pth --input_dir test_example --output_dir results --device cuda:0
 ```
