@@ -22,8 +22,8 @@ The code requires `python>=3.8` and `pytorch>=1.7`. Please follow the instructio
 clone the repository locally with
 
 ```
-git clone **.git
-cd **
+git clone https://github.com/ittong/LifespanFix.git
+cd LifespanFix
 ```
 
 The following optional dependencies are necessary for MRI processing and saving. 
@@ -33,7 +33,7 @@ pip install nibabel
 ```
 
 ## <a name="GettingStarted"></a>Getting Started
-First download a [model checkpoint](). Then the model can be used in just one line to obtain the corrected result from an input white matter segmentation:
+First download a [model checkpoint](https://drive.google.com/drive/folders/1ENl2m2Es15bvlHNB7hV6UKN5m9aSv28_?usp=share_link). Then the model can be used in just one line to obtain the corrected result from an input white matter segmentation:
 
 ```
 python infer.py --checkpoint <path/to/checkpoint> --input_dir <path/to/input> --output_dir <path/to/output> --device <device/id>
