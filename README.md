@@ -39,14 +39,12 @@ LifespanFix is applied iteratively, with the probabilistic output from each iter
 
 We provide checkpoints trained with different proportions of training subjects without simulated defects, which support different levels of correction.
 
-## Genus-0 Topology for Downstream Applications
-Although LifespanFix effectively corrects topological and anatomical defects in WM segmentations, its patch-wise correction does not explicitly guarantee strict genus-0 topology for the entire cortical surface. For downstream applications that do not require genus-0 topology, such as WM volume measurement and other voxel-based analyses, LifespanFix outputs can be used directly. For downstream applications requiring strict genus-0 topology, such as spherical mapping for cortical surface registration and parcellation, genus-0 enforcement can be performed as an independent procedure. It is not an essential component of LifespanFix.
-
-For convenience, we provide a genus-0 enforcement script based on the fast-marching topology correction of Bazin and Pham [1, 2]. Our implementation (`utils/topology.py`) was written with reference to the Python/Numba implementation in CortexODE [3] ([`util/tca.py`](https://github.com/m-qiang/CortexODE/blob/main/util/tca.py), https://github.com/m-qiang/CortexODE). Please also cite [1, 2] if you use it.
+## Genus-0 Topology for Downstream Applications (Optional)
+Although LifespanFix effectively corrects topological and anatomical defects, its patch-wise correction does not explicitly guarantee strict genus-0 topology for the entire cortical surface. LifespanFix outputs can be used directly for downstream applications that do not require genus-0 topology, such as WM volume measurement. For applications requiring strict genus-0 topology, such as spherical mapping, genus-0 topology can be further enforced by:
 ```
 python genus0.py --input_dir results --output_dir results_genus0
 ```
-Note that enforcing genus-0 topology does not necessarily ensure anatomical accuracy. For example, an incorrect WM connection between neighboring gyri can be eliminated either by removing the connection or by filling the corresponding tunnel. Both operations satisfy the genus-0 constraint but produce different cortical boundaries, and only one may accurately represent the underlying anatomy.
+This script implements the fast-marching topology correction of Bazin and Pham [1, 2], written with reference to the implementation in CortexODE [3] (https://github.com/m-qiang/CortexODE/blob/main/util/tca.py). It corrects all residual topological defects by filling, i.e., handles are eliminated by filling the corresponding tunnels rather than removing the connections, which may not be anatomically accurate. We therefore recommend applying it to LifespanFix outputs.
 
 ## Training
 ```
