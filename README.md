@@ -4,6 +4,7 @@
 
 [Tong Wang](https://scholar.google.com/citations?user=EnnmFqIAAAAJ&hl=zh-CN), [Yue Sun](https://scholar.google.com/citations?user=QMa2E4gAAAAJ&hl=zh-CN), [Li Wang](https://scholar.google.com/citations?user=xjzMf0cAAAAJ&hl=zh-CN)
 
+<div align="justify">
 
 **LifespanFix** is a lifespan-robust cortical correction model that directly fixes topological and anatomical defects in white matter (WM) segmentations. It was trained on 3,189 subjects spanning the human lifespan, from infancy to older adulthood, across nine public datasets.
 <p align="center">
@@ -65,3 +66,5 @@ If you find LifespanFix useful, please cite our paper. The BibTeX entry will be 
 
 ## License
 This project is released under the [Apache License 2.0](LICENSE).
+
+</div>
