@@ -1,0 +1,8 @@
+# developed with python 3.11 and torch 2.5.1 (install torch following https://pytorch.org/get-started/locally/)
+torch>=2.0
+numpy
+scipy
+nibabel
+tqdm
+numba
+scikit-image

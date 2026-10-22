@@ -14,7 +14,7 @@ from utils.utils import reconstruct_volume
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--checkpoint', type=str, default="checkpoint/correction_net_10error_free_wm.pth")
+    ap.add_argument('--checkpoint', type=str, default='model/correction_net_4error_free_wm.pth')
     ap.add_argument('--input_dir', type=str, default='./test_example',
                     help='All files must be binarized masks and end with .nii.gz')
     ap.add_argument('--output_dir', type=str, default='./results')
@@ -24,12 +24,17 @@ def main():
     ap.add_argument('--stride', type=int, default=40)
     ap.add_argument('--threshold', type=float, default=0.5,
                     help='Confidence threshold for correction; higher values allow less modifications.')
+    ap.add_argument('--save_all_iters', action='store_true',
+                    help='Save the result of every iteration instead of only the last one')
 
     ap.add_argument('--batch_size', type=int, default=4)
     ap.add_argument('--device', type=str, default='cuda:0')
     args = ap.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
+
+    # output suffix follows the checkpoint, e.g. correction_net_4error_free_wm.pth -> label_4error_free_wm
+    tag = os.path.basename(args.checkpoint).replace('.pth', '').replace('correction_net_', '')
 
     device = torch.device(args.device)
     correction_net = DUNet().to(device)
@@ -47,6 +52,7 @@ def main():
         for it in range(1, args.iters + 1):
             print(f'=== Iteration {it}/{args.iters} for {subj_id} ===')
 
+            # the probabilistic output of each iteration is the input of the next one
             if it == 1:
                 dataset = InferAllDataset(
                     os.path.join(args.input_dir, subj_id),
@@ -89,8 +95,9 @@ def main():
                      os.path.join(args.output_dir, f"{stem}_iter_tmp_probability.nii.gz"))
 
             # final save
-            nib.save(nib.Nifti1Image(recon_label.astype(np.int16), orig_img.affine, orig_img.header),
-                     os.path.join(args.output_dir, f"{stem}_iter{it}_label_0error_free_wm.nii.gz"))
+            if args.save_all_iters or it == args.iters:
+                nib.save(nib.Nifti1Image(recon_label.astype(np.int16), orig_img.affine, orig_img.header),
+                         os.path.join(args.output_dir, f"{stem}_iter{it}_label_{tag}.nii.gz"))
 
             # delete tmp at last iter
             if it == args.iters:

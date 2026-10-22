@@ -30,3 +30,18 @@ def reconstruct_volume(patches, coords, orig_label, patch_size, pad_size=24, thr
     label = label[pad_size:pad_size+oz, pad_size:pad_size+oy, pad_size:pad_size+ox]
 
     return recon, label
+
+# -----------------------------
+# Losses (Eqs. 1-4)
+# -----------------------------
+def ce_loss(pred, target):
+    """Voxel-wise cross-entropy with a (possibly soft) target; pred is a WM probability in (0, 1).
+    Written explicitly so that gradients also flow through a probabilistic target (the pseudo label)."""
+    return -(target * pred.log() + (1 - target) * (1 - pred).log()).mean()
+
+
+def dice_loss(pred, target, eps=1e-6):
+    """1 - 2<target, pred> / (|target|_1 + |pred|_1), averaged over the batch."""
+    dims = tuple(range(1, pred.dim()))
+    inter = (pred * target).sum(dims)
+    return (1 - 2 * inter / (pred.sum(dims) + target.sum(dims) + eps)).mean()
